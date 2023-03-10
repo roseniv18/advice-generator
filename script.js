@@ -1,25 +1,28 @@
-const diceBtn = document.querySelector('.dice-btn');
-const adviceNum = document.querySelector('#advice-num');
-const adviceText = document.querySelector('.advice-text');
+const diceBtn = document.querySelector(".dice-btn")
+const adviceNum = document.querySelector("#advice-num")
+const adviceText = document.querySelector(".advice-text")
 
 const getAdvice = async () => {
-    const response = await fetch('https://api.adviceslip.com/advice', {cache: "no-store"});
-    const data = response.json();
-    return data;
+    try {
+        const response = await fetch("https://api.adviceslip.com/advice", {cache: "no-store"})
+        const data = await response.json()
+        return data.slip
+    }
+    catch(err) {
+        console.log(err)
+    }
 }
 
-function showAdvice() {
-            getAdvice()
-                .then(data => {
-                    adviceText.innerText = data.slip.advice;
-                    adviceNum.innerText = data.slip.id;
-                    console.log(data);
-                })
-                .catch(err => console.log(err));
+const showAdvice = async () => {
+    const {advice, id} = await getAdvice()
+    adviceText.innerText = advice
+    adviceNum.innerText = id
 } 
 
-showAdvice();
+// On initial page load
+showAdvice()
 
-diceBtn.addEventListener('click', () => {
-    showAdvice();
+// On button click
+diceBtn.addEventListener("click", () => {
+    showAdvice()
 })
